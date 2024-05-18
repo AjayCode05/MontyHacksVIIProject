@@ -1,0 +1,247 @@
+import pygame
+import os
+from pygame.locals import *
+import sys
+from io import StringIO
+
+pygame.init()
+screen = pygame.display.set_mode((800, 600))
+pygame.display.set_caption('Pong')
+clock = pygame.time.Clock()
+
+font = pygame.font.Font("LuffyFont.ttf", 60)
+font_small = pygame.font.Font(None, 30)
+font2 = pygame.font.Font(None, 20)
+
+start_button = pygame.image.load("start.png")
+start_rect = start_button.get_rect(midbottom=(400, 450))
+luffy_surf = pygame.image.load("luffyimage.png")
+luffy_rect = luffy_surf.get_rect(midbottom=(400, 350))
+
+pygame.mixer.init()
+pygame.mixer.music.load("luffysong.mp3")
+pygame.mixer.music.play(-1)
+
+def names(display_text):
+    screen = pygame.display.set_mode((800, 600))
+    name = ""
+    font = pygame.font.Font("LuffyFont.ttf", 50)
+    while True:
+        for evt in pygame.event.get():
+            if evt.type == pygame.QUIT:
+                pygame.quit()
+                exit()
+            if evt.type == KEYDOWN: 
+                if evt.key == K_BACKSPACE:
+                    name = name[:-1]
+                elif evt.key == K_RETURN:
+                    return name
+                else:
+                    name += evt.unicode
+        screen.fill((205, 250, 211))
+        block = font.render(name, True, (0, 0, 0))
+        rect = block.get_rect(center=screen.get_rect().center)
+        instruction = font.render(str(display_text), True, (0,0,0))
+        instruction_rect = instruction.get_rect(midbottom=(400, 250))
+        screen.blit(block, rect)
+        screen.blit(instruction, instruction_rect)
+        pygame.display.flip()
+        clock.tick(30)
+
+game_state = "Intro"
+
+while game_state == "Intro":
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            pos = pygame.mouse.get_pos()
+            if start_rect.collidepoint(pos):
+                game_state = "Level One"
+
+    screen.fill((205, 250, 211))
+    textsurf = font.render("Luffy's Crazy Coding Catastrophe", True, (0, 30, 70))
+    textrect = textsurf.get_rect(midbottom=(400, 150))
+    screen.blit(start_button, start_rect)
+    screen.blit(textsurf, textrect)
+    pygame.display.update()
+    clock.tick(60)
+
+if game_state == "Level One":
+    screen.fill((205, 250, 211))
+    screen.blit(luffy_surf, luffy_rect)
+    textsurf = font_small.render("Hey! My name is Luffy. Let's learn Python!", True, (0, 30, 70))
+    textrect = textsurf.get_rect(midbottom=(400, 450))
+    screen.blit(textsurf, textrect)
+    pygame.display.update()
+    pygame.time.delay(5000)
+
+    name = names("Please type your name below.")
+
+while game_state == "Level One":
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+
+    screen.fill((205, 250, 211))
+    screen.blit(luffy_surf, luffy_rect)
+    textsurf = font_small.render("Hey, " + name + ". Let's learn Python together!", True, (0, 30, 70))
+    textrect = textsurf.get_rect(center=screen.get_rect().center).move(0, 90)
+    screen.blit(textsurf, textrect)
+    screen.blit(luffy_surf, luffy_rect)
+    pygame.display.update()
+    pygame.time.delay(5000)
+
+    screen.fill((205, 250, 211))
+    textsurf = font_small.render("First, we're going to talk about variables.", True, (0, 30, 70))
+    textrect = textsurf.get_rect(center=screen.get_rect().center).move(0, 90)
+    screen.blit(textsurf, textrect)
+    screen.blit(luffy_surf, luffy_rect)
+    pygame.display.update()
+    pygame.time.delay(5000)  
+
+    screen.fill((205, 250, 211))
+    textsurf = font_small.render("A variable is just a thing that stores information.", True, (0, 30, 70))
+    textrect = textsurf.get_rect(center=screen.get_rect().center).move(0, 90)
+    screen.blit(textsurf, textrect)
+    screen.blit(luffy_surf, luffy_rect)
+    pygame.display.update()
+    pygame.time.delay(5000)
+
+    screen.fill((205, 250, 211))
+    font_smaller = pygame.font.Font(None, 20)
+    textsurf = font_smaller.render("That information could be like a word or a number. We call these strings and integers.", True, (0, 30, 70))
+    textrect = textsurf.get_rect(center=screen.get_rect().center).move(0, 90)
+    screen.blit(textsurf, textrect)
+    screen.blit(luffy_surf, luffy_rect)
+    pygame.display.update()
+    pygame.time.delay(5000)
+
+    screen.fill((205, 250, 211))
+    screen.blit(luffy_surf, luffy_rect)
+    textsurf = font_small.render("Let's do a quick question. Is this a string or an integer?", True, (0, 30, 70))
+
+    textrect = textsurf.get_rect(center=screen.get_rect().center).move(0, 90)
+    screen.blit(textsurf, textrect)
+    screen.blit(luffy_surf, luffy_rect)
+    pygame.display.update()
+    pygame.time.delay(5000) 
+
+    answer = names('"rocketship"')
+    if answer.lower() != "integer":
+      screen.fill((205, 250, 211))
+      textsurf = font_smaller.render("Insert praise here", True, (0, 30, 70))
+      textrect = textsurf.get_rect(center=screen.get_rect().center).move(0, 90)
+      screen.blit(textsurf, textrect)
+      screen.blit(luffy_surf, luffy_rect)
+      pygame.display.update()
+      pygame.time.delay(5000)
+    else:
+      screen.fill((205, 250, 211))
+      textsurf = font_small.render("PLEASE INSERT criticism HERE", True, (0, 30, 70))
+      textrect = textsurf.get_rect(center=screen.get_rect().center).move(0, 90)
+      screen.blit(textsurf, textrect)
+      screen.blit(luffy_surf, luffy_rect)
+      pygame.display.update()
+      pygame.time.delay(5000)
+    
+    screen.fill((205, 250, 211))
+    font_smaller = pygame.font.Font(None, 20)
+    textsurf = font_smaller.render("Alright, time to do a coding question. Let's test your code!", True, (0, 30, 70))
+    textrect = textsurf.get_rect(center=screen.get_rect().center).move(0, 90)
+    screen.blit(textsurf, textrect)
+    screen.blit(luffy_surf, luffy_rect)
+    pygame.display.update()
+    pygame.time.delay(5000)
+
+    screen.fill((205, 250, 211))
+    textsurf = font_smaller.render("Given two variables, x and y, make code that will add them together.", True, (0, 30, 70))
+    textrect = textsurf.get_rect(center=screen.get_rect().center).move(0, 90)
+    screen.blit(textsurf, textrect)
+    screen.blit(luffy_surf, luffy_rect)
+    pygame.display.update()
+    pygame.time.delay(5000)
+
+    screen.fill((205, 250, 211))
+    textsurf = font_smaller.render("However, if x and y aren't integers, you should not add them", True, (0, 30, 70))
+    textrect = textsurf.get_rect(center=screen.get_rect().center).move(0, 90)
+    screen.blit(textsurf, textrect)
+    screen.blit(luffy_surf, luffy_rect)
+    pygame.display.update()
+    pygame.time.delay(5000)
+
+    screen.fill((205, 250, 211))
+    textsurf = font_smaller.render("You can do this with an if statement, using type(x) and type(y). Happy coding!", True, (0, 30, 70))
+    textrect = textsurf.get_rect(center=screen.get_rect().center).move(0, 90)
+    screen.blit(textsurf, textrect)
+    screen.blit(luffy_surf, luffy_rect)
+    pygame.display.update()
+    pygame.time.delay(5000)
+    
+    code1 = """
+    x = 1
+    y = 2
+    """
+    code2 = """
+    x = 'foo'
+    y = 1
+    """
+    for i in range(100):
+      n = names('Write your code here. Type tab to indent, and "end" on a newline to stop typing.')
+      n = str(n)
+      if n == "end":
+        break
+      code1 += "\n" + str(n)
+      code2 += "\n" + str(n)
+      pygame.display.update()
+      clock.tick(60)
+    code1 += "\n" + ""
+    code2 += "\n" + ""
+    old_stdout = sys.stdout
+    redirected_output = sys.stdout = StringIO()
+    try:
+      exec(code1)
+    except:
+      screen.fill((205, 250, 211))
+      textsurf = font_smaller.render("There is a syntax error, try again", True, (0, 30, 70))
+      textrect = textsurf.get_rect(center=screen.get_rect().center).move(0, 90)
+      screen.blit(textsurf, textrect)
+      screen.blit(luffy_surf, luffy_rect)
+      pygame.display.update()
+      pygame.time.delay(5000)
+    sys.stdout = old_stdout
+    ans1 = redirected_output.getvalue()
+    old_stdout = sys.stdout
+    redirected_output = sys.stdout = StringIO()
+    try:
+      exec(code1)
+    except:
+      screen.fill((205, 250, 211))
+      textsurf = font_smaller.render("There is a syntax error, try again", True, (0, 30, 70))
+      textrect = textsurf.get_rect(center=screen.get_rect().center).move(0, 90)
+      screen.blit(textsurf, textrect)
+      screen.blit(luffy_surf, luffy_rect)
+      pygame.display.update()
+      pygame.time.delay(5000)
+    sys.stdout = old_stdout
+    ans2 = redirected_output.getvalue()
+    if ans1 == 3 and ans2 == None:
+      screen.fill((205, 250, 211))
+      textsurf = font_smaller.render("Congrats your 20 percent of the way to becoming a straw hat: You win", True, (0, 30, 70))
+      textrect = textsurf.get_rect(center=screen.get_rect().center).move(0, 90)
+      screen.blit(textsurf, textrect)
+      screen.blit(luffy_surf, luffy_rect)
+      pygame.display.update()
+      pygame.time.delay(5000)
+    else:
+      screen.fill((205, 250, 211))
+      textsurf = font_smaller.render("Try again next time", True, (0, 30, 70))
+      textrect = textsurf.get_rect(center=screen.get_rect().center).move(0, 90)
+      screen.blit(textsurf, textrect)
+      screen.blit(luffy_surf, luffy_rect)
+      pygame.display.update()
+      pygame.time.delay(5000)
+    pygame.quit()
+    exit()
